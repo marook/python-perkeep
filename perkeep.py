@@ -17,9 +17,20 @@ def query(opts):
 def download(ref):
     return urlopen('/ui/download/{}/blob'.format(ref))
 
-def upload(blob, file_name):
+def sign(data):
+    '''Signs an dict object.
+    '''
+    config = get_web_client_config()
+    data['camliSigner'] = config['signing']['publicKeyBlobRef']
+    clear_text = '{"camliVersion":1,\n' + json.dumps(data, indent='\t')[len('{\n'):]
+    with urlopen(config['signing']['signHandler'], data='json={}'.format(clear_text).encode('utf-8'), content_type='application/x-www-form-urlencoded') as req:
+        print(req.read().decode('utf-8'))
+        return req
+    # TODO
+
+def upload(blob, file_name, path='/ui/?camli.mode=uploadhelper'):
     boundary, form = build_multipart_form(blob, file_name)
-    with urlopen('/ui/?camli.mode=uploadhelper', data=form, content_type='multipart/form-data; boundary={}'.format(boundary)) as req:
+    with urlopen(path, data=form, content_type='multipart/form-data; boundary={}'.format(boundary)) as req:
         body = json.load(req)
     return body['got'][0]['fileref']
 

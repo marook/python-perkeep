@@ -6,6 +6,7 @@ import perkeep
 def main():
     query_solln()
     upload_hello_world()
+    sign()
 
 def query_solln():
     print_headline('query_solln')
@@ -33,6 +34,10 @@ def upload_hello_world():
     content = 'Hello World!'.encode('utf-8')
     file_ref = perkeep.upload(content, 'hello_world.txt')
     print('file_ref: {}'.format(file_ref))
+
+def sign():
+    print_headline('sign')
+    perkeep.sign({})
         
 def print_headline(name):
     print('\n------------------------------------\n{}'.format(name))
