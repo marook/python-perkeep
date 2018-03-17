@@ -18,14 +18,45 @@ def download(ref):
     return urlopen('/ui/download/{}/blob'.format(ref))
 
 def upload(blob, file_name):
-    form = build_multipart_form(blob, file_name)
-    with urlopen('/ui/?camli.mode=uploadhelper', data=form) as req:
+    boundary, form = build_multipart_form(blob, file_name)
+    with urlopen('/ui/?camli.mode=uploadhelper', data=form, content_type='multipart/form-data; boundary={}'.format(boundary)) as req:
         body = json.load(req)
-    return body['data']['got'][0]['fileref']
+    return body['got'][0]['fileref']
 
-def build_multipart_form(blob, file_name):
-    pass # TODO
-    raise Exception('implement me')
+def build_multipart_form(blob, file_name, content_type='application/octet-stream'):
+    '''Formats a blob into a multipart form.
+
+    blob shoud have type bytes.
+
+    -----------------------------6930946476218338041418917799
+    Content-Disposition: form-data; name="ui-upload-file-helper-form"; filename="hello_world.txt"
+    Content-Type: text/plain
+
+    Hello World!
+
+    -----------------------------6930946476218338041418917799--
+    '''
+    nl = b'\r\n'
+    boundary = '-----------------------------6930946476218338041418917799'
+    fragments = [
+        b'--',
+        boundary.encode('ascii'),
+        nl,
+        b'Content-Disposition: form-data; name="ui-upload-file-helper-form"; filename="',
+        file_name.encode('ascii'),
+        b'"',
+        nl,
+        b'Content-Type: ',
+        content_type.encode('ascii'),
+        nl,
+        nl,
+        blob,
+        nl,
+        b'--',
+        boundary.encode('ascii'),
+        b'--',
+    ]
+    return boundary, b''.join(fragments)
 
 def get_web_client_config():
     global web_client_config
@@ -34,9 +65,11 @@ def get_web_client_config():
             web_client_config = json.load(req)
     return web_client_config
 
-def urlopen(path, data=None):
+def urlopen(path, data=None, content_type=None):
     server_config = get_default_server_config()
     request = urllib.request.Request(server_config['server'] + path, data=data)
+    if(not content_type is None):
+        request.add_header('Content-Type', content_type)
     return get_default_perkeep_opener().open(request)
 
 perkeep_opener = None
