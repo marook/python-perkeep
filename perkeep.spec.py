@@ -3,10 +3,12 @@
 #
 import perkeep
 
-def main():
+def main(modify):
     query_solln()
     upload_hello_world()
     sign()
+    if(modify):
+        persist()
 
 def query_solln():
     print_headline('query_solln')
@@ -37,10 +39,21 @@ def upload_hello_world():
 
 def sign():
     print_headline('sign')
-    perkeep.sign({})
+    print(perkeep.sign({}).decode('utf-8'))
+
+def persist():
+    print_headline('persist')
+    ref = perkeep.persist({
+        'title': 'python-perkeep test permanode',
+        'somaAttribute': [
+            '1',
+            '2',
+        ],
+    })
+    print('new permanode {}'.format(ref))
         
 def print_headline(name):
     print('\n------------------------------------\n{}'.format(name))
 
 if __name__ == '__main__':
-    main()
+    main(False)
