@@ -79,8 +79,6 @@ def upload(blob, file_name, path='/ui/?camli.mode=uploadhelper'):
     return body['got'][0]['fileref']
 
 def upload_claim(blob):
-    print('upload_claim: {}'.format(blob.decode('utf-8')))
-
     m = hashlib.sha1()
     m.update(blob)
     ref = 'sha1-{}'.format(m.hexdigest())
