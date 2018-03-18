@@ -1,0 +1,9 @@
+perkeep
+
+1) Installation
+
+
+------------------------------------------------------------------------
+Installation
+
+$ python3 setup.py install --home ~/.local
