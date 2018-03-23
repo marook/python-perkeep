@@ -1,3 +1,4 @@
+import base64
 import json
 import os
 import platform
@@ -24,9 +25,9 @@ def get_default_perkeep_opener():
         auth_method, user, password = server_config['auth'].split(':')
         if(auth_method != 'userpass'):
             raise Exception('Unknown auth_method {}'.format(auth_method))
-        auth_handler = urllib.request.HTTPBasicAuthHandler()
+        auth_handler = PreemptiveBasicAuthHandler()
         auth_handler.add_password(
-            realm='',
+            realm=None,
             uri=server_config['server'],
             user=user,
             passwd=password)
@@ -61,3 +62,23 @@ def get_perkeep_config_dir_path():
     if(platform.system() == 'Windows'):
         return os.path.join(os.path.expanduser('~'), 'AppData', 'Roaming', 'Camlistore')
     return os.path.join(os.path.expanduser('~'), '.config', 'camlistore')
+
+class PreemptiveBasicAuthHandler(urllib.request.HTTPBasicAuthHandler):
+    '''Preemptive basic auth.
+
+    Instead of waiting for a 403 to then retry with the credentials,
+    send the credentials if the url is handled by the password manager.
+    Note: please use realm=None when calling add_password.'''
+    def http_request(self, req):
+        url = req.get_full_url()
+        realm = None
+        # this is very similar to the code from retry_http_basic_auth()
+        # but returns a request object.
+        user, pw = self.passwd.find_user_password(realm, url)
+        if pw:
+            raw = "%s:%s" % (user, pw)
+            auth = 'Basic %s' % base64.b64encode(raw.encode('ascii')).decode('ascii').strip()
+            req.add_unredirected_header(self.auth_header, auth)
+        return req
+
+    https_request = http_request
