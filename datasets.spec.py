@@ -28,7 +28,8 @@ def main():
 def build_extender(name):
     def extender(sample):
         for i in range(2):
-            def mapper(key, val):
+            def mapper(key, sample):
+                val = sample[key]
                 if(key == 'random' and not val is None):
                     return 10*val
                 else:

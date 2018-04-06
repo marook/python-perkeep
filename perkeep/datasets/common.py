@@ -30,8 +30,7 @@ class MappingSample(DelegateSample):
         self.mapper = mapper
 
     def __getitem__(self, probe_id):
-        value = self.delegate[probe_id]
-        return self.mapper(probe_id, value)
+        return self.mapper(probe_id, self.delegate)
 
 class MixinSample(DelegateSample):
     def __init__(self, delegate, extra_properties, overwrite=True):
