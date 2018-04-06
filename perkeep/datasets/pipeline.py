@@ -42,6 +42,7 @@ it = samples_by_category['train'].batch_arrays()
 
 from . import common
 import itertools
+import numpy as np
 import random
 
 class Pipeline(object):
@@ -145,10 +146,13 @@ class XYAdapter(object):
     def batch_arrays(self):
         sample_iter = iter(self)
         while True:
-            batch_array = []
+            x_array = []
+            y_array = []
             for i in range(self.batch_size):
-                batch_array.append(next(sample_iter))
-            yield batch_array
+                x, y = next(sample_iter)
+                x_array.append(x)
+                y_array.append(y)
+            yield np.array(x_array), np.array(y_array)
 
 def identity(x):
     return x
