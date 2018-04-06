@@ -23,6 +23,7 @@ pl.categories = {
 pl.extenders.append(a_generator)
 pl.mapper = lambda s: (s['in'], s['out'])
 pl.batch_size = 128
+pl.shuffle = True
 
 # performes S1 and S2
 pl.append_reduced_samples(input_samples, output_samples)
