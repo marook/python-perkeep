@@ -139,12 +139,16 @@ class XYAdapter(object):
         return len(self.samples)
 
     def __iter__(self):
+        for sample in self.samples:
+            yield self.mapper(sample)
+
+    def infinite(self):
         while True:
-            for sample in self.samples:
-                yield self.mapper(sample)
+            for sample in self:
+                yield sample
 
     def batch_arrays(self):
-        sample_iter = iter(self)
+        sample_iter = iter(self.infinite())
         while True:
             x_array = []
             y_array = []
