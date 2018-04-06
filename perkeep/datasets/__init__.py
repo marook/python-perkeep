@@ -18,8 +18,9 @@ Writing a dataset:
 Appending a random value to a written dataset:
     ds = perkeep.datasets.RandomSampleDatasetWriter(ds)
 
-Reading a dataset:
+Reading a dataset and splitting:
     ds = perkeep.datasets.build_from_resource_identifier('pk:attr:"per:type":dataset')
+    sample_categories = perkeep.datasets.split(ds.samples)
 '''
 from .common import UnionDatasetReader, ShuffleDatasetReader, split, RandomSampleDatasetWriter
 from .fs import FileSystemDatasetReader, FileSystemDatasetWriter
