@@ -1,3 +1,6 @@
+#
+# Copyright 2018 Markus Peröbner
+#
 from distutils.core import setup
 
 setup(name='perkeep',
@@ -6,5 +9,8 @@ setup(name='perkeep',
       description='a client library for perkeep',
       author='Markus Peroebner',
       author_email='markus.peroebner@gmail.com',
-      packages=['perkeep'],
+      packages=[
+            'perkeep',
+            'perkeep.datasets',
+      ],
 )

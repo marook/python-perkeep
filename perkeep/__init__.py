@@ -4,7 +4,7 @@
 import datetime
 import hashlib
 import json
-import perkeep.pkhttp as pkhttp
+from . import pkhttp
 import random
 
 web_client_config = None

@@ -1,3 +1,6 @@
+#
+# Copyright 2018 Markus Peröbner
+#
 import base64
 import json
 import os
