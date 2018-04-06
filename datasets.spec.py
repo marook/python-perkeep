@@ -12,6 +12,8 @@ def main():
     ])
     pl.extenders.append(build_extender('e1'))
     pl.extenders.append(build_extender('e2'))
+    pl.x_mapper = lambda s: (s['name'], s['i'], s['tread_right_velocity'], s['tread_left_velocity'], s['word'])
+    pl.y_mapper = lambda s: (s['random'])
     pl.batch_size = 2
 
     all_samples = pl.get(ds.samples)

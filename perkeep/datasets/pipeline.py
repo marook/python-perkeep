@@ -21,7 +21,8 @@ pl.categories = {
     'test': 0.1,
 }
 pl.extenders.append(a_generator)
-pl.mapper = lambda s: (s['in'], s['out'])
+pl.x_mapper = lambda s: s['in']
+pl.y_mapper = lambda s: s['out']
 pl.batch_size = 128
 pl.shuffle = True
 
@@ -53,7 +54,8 @@ class Pipeline(object):
             'test': 0.1,
         }
         self.extenders = []
-        self.mapper = identity
+        self.x_mapper = identity
+        self.y_mapper = identity
         self.batch_size = 128
         self.shuffle = True
 
@@ -67,7 +69,7 @@ class Pipeline(object):
         samples = list(samples)
         if(self.shuffle):
             random.shuffle(samples)
-        return XYAdapter(samples, self.mapper, self.batch_size)
+        return XYAdapter(samples, self._mapper, self.batch_size)
 
     def split(self, samples):
         reduced_samples = list(self._reduced_samples(samples))
@@ -76,7 +78,12 @@ class Pipeline(object):
             splitted_samples['train'] = list(self._extended_samples(splitted_samples['train']))
             if(self.shuffle):
                 random.shuffle(splitted_samples['train'])
-        return dict([(c, XYAdapter(s, self.mapper, self.batch_size)) for c, s in splitted_samples.items()])
+        return dict([(c, XYAdapter(s, self._mapper, self.batch_size)) for c, s in splitted_samples.items()])
+
+    def _mapper(self, sample):
+        x = self.x_mapper(sample)
+        y = self.y_mapper(sample)
+        return (x, y)
 
     def _reduced_samples(self, samples):
         for sample in samples:
