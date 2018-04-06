@@ -64,7 +64,7 @@ class FileSystemDatasetReader(object):
         for sample in dataset['samples']:
             yield FileSystemSample(self.dataset_path, self.probes, probe_by_id, sample)
 
-class FileSystemSample(object):
+class FileSystemSample(common.Sample):
     
     IDENTITY_TYPES = set([
         'boolean',
@@ -89,6 +89,9 @@ class FileSystemSample(object):
             image_path = os.path.join(self.dataset_path, probe_value)
             return Image.open(image_path)
         raise Error('Unknown probe type: {}'.format(probe.type))
+
+    def keys(self):
+        return self._probe_by_id.keys()
 
     @property
     def values(self):

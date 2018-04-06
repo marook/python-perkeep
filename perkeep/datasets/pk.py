@@ -51,7 +51,7 @@ class PerkeepDatasetReader(object):
         for sample in dataset['samples']:
             yield PerkeepSample(probe_by_id, sample)
 
-class PerkeepSample(object):
+class PerkeepSample(common.Sample):
 
     IDENTITY_TYPES = set([
         'boolean',
@@ -73,7 +73,15 @@ class PerkeepSample(object):
         if(probe.type == 'image'):
             with perkeep.download(probe_value) as req:
                 return Image.open(req)
+        if(probe.type == 'audio'):
+            with perkeep.download(probe_value) as req:
+                # data = io.BytesIO(req.read())
+                # return soundfile.read(data)
+                raise Exception('audio support not yet implemented')
         raise Exception('Unknown probe type: {}'.format(probe.type))
+
+    def keys(self):
+        return self.probe_by_id.keys()
 
 class PerkeepDatasetWriter(object):
     def __init__(self, probes, image_format='jpeg', permanode_attributes={}):

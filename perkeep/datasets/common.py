@@ -8,6 +8,47 @@ class Probe(object):
         self.index = index
         self.type = type
 
+class Sample(object):
+    def __repr__(self):
+        d = dict([(k, self[k]) for k in self.keys()])
+        return '{}'.format(d)
+
+class DelegateSample(Sample):
+    def __init__(self, delegate):
+        super(DelegateSample, self).__init__()
+        self.delegate = delegate
+
+    def __getitem__(self, probe_id):
+        return self.delegate[probe_id]
+    
+    def keys(self):
+        return self.delegate.keys()
+
+class MappingSample(DelegateSample):
+    def __init__(self, delegate, mapper):
+        super(MappingSample, self).__init__(delegate)
+        self.mapper = mapper
+
+    def __getitem__(self, probe_id):
+        value = self.delegate[probe_id]
+        return self.mapper(probe_id, value)
+
+class MixinSample(DelegateSample):
+    def __init__(self, delegate, extra_properties, overwrite=True):
+        super(MixinSample, self).__init__(delegate)
+        self.extra_properties = extra_properties
+        self.overwrite = overwrite
+
+    def __getitem__(self, probe_id):
+        dict0 = self.extra_properties if self.overwrite else self.delegate
+        if(probe_id in dict0):
+            return dict0[probe_id]
+        dict1 = self.delegate if self.overwrite else self.extra_properties
+        return dict1[probe_id]
+
+    def keys(self):
+        return list(set(list(self.delegate.keys()) + list(self.extra_properties.keys())))
+
 class UnionDatasetReader(object):
     def __init__(self, datasets):
         self.datasets = datasets
@@ -62,22 +103,24 @@ class LazyDatasetReader(object):
     def samples(self):
         return self.dataset.samples
 
-DEFAULT_CATEGORIES = [
-    ('train', 0.7),
-    ('test', 0.2),
-    ('validate', 0.1),
-]
+DEFAULT_CATEGORIES = {
+    'train': 0.8,
+    'validate': 0.1,
+    'test': 0.1,
+}
 
 def split(samples, categories=DEFAULT_CATEGORIES, random_id='random'):
     max_r_array = [e for e in build_max_random_values(categories)]
 
     def get_category(r):
+        if(r is None):
+            r = random.random()
         for name, max_r in max_r_array:
             if(r <= max_r):
                 return name
         raise Exception('We should not have been here :( r={}'.format(r))
 
-    samples_by_category = dict([(name, []) for name, weight in categories])
+    samples_by_category = dict([(name, []) for name, weight in categories.items()])
     for sample in samples:
         category = get_category(sample[random_id])
         samples_by_category[category].append(sample)
@@ -86,13 +129,13 @@ def split(samples, categories=DEFAULT_CATEGORIES, random_id='random'):
 def build_max_random_values(categories):
     weight_sum = calc_weight_sum(categories)
     current_sum = 0
-    for name, weight in categories:
+    for name, weight in categories.items():
         current_sum += weight
         yield (name, current_sum / weight_sum)
 
 def calc_weight_sum(categories):
     ws = 0
-    for name, weight in categories:
+    for name, weight in categories.items():
         ws += weight
     return ws
 

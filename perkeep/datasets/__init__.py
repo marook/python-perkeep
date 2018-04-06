@@ -22,7 +22,8 @@ Reading a dataset and splitting:
     ds = perkeep.datasets.build_from_resource_identifier('pk:attr:"per:type":dataset')
     sample_categories = perkeep.datasets.split(ds.samples)
 '''
-from .common import UnionDatasetReader, ShuffleDatasetReader, split, RandomSampleDatasetWriter
+from .common import UnionDatasetReader, ShuffleDatasetReader, split, RandomSampleDatasetWriter, MappingSample, MixinSample
 from .fs import FileSystemDatasetReader, FileSystemDatasetWriter
+from .pipeline import Pipeline
 from .pk import PerkeepDatasetReader, PerkeepDatasetWriter
 from .uri import build_from_resource_identifier
