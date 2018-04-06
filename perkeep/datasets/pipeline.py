@@ -17,7 +17,7 @@ pl.filters.append(lambda s: s['value'] > 0.5)
 pl.reducers.append(['value'])
 pl.categories = {
     'train': 0.8,
-    'validate': 0.1,
+    'validation': 0.1,
     'test': 0.1,
 }
 pl.extenders.append(a_generator)
@@ -50,7 +50,7 @@ class Pipeline(object):
         self.reducers = []
         self.categories = {
             'train': 0.8,
-            'validate': 0.1,
+            'validation': 0.1,
             'test': 0.1,
         }
         self.extenders = []
