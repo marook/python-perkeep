@@ -28,11 +28,15 @@ pl.shuffle = True
 # performes S1 and S2
 pl.append_reduced_samples(input_samples, output_samples)
 
-ds_split = pl.get(input_samples, 'train')
-ds_split.count('train')
-ds_split.get_batches('train')
-ds_split.get_batches('validate')
-ds_split.get('test')
+samples = pl.get(input_samples)
+len(samples)
+it = iter(samples)
+it = samples.batch_arrays()
+
+samples_by_category = pl.split(input_samples)
+len(samples_by_category['train'])
+it = iter(samples_by_category['train'])
+it = samples_by_category['train'].batch_arrays()
 '''
 
 from . import common
