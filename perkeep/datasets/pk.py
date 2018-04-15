@@ -41,6 +41,10 @@ class PerkeepDatasetReader(object):
         return self.__dataset
 
     @property
+    def probes(self):
+        return self._dataset['probes']
+
+    @property
     def sample_count(self):
         return len(self._dataset['samples'])
     

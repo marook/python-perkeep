@@ -61,6 +61,7 @@ class Pipeline(object):
         self.shuffle = True
 
     def append_reduced_samples(self, samples_input, samples_output):
+        # TODO the api is right now unable to predict the probes settings
         for sample in self._reduced_samples(samples_input):
             samples_output.append(sample)
 

@@ -53,6 +53,19 @@ class UnionDatasetReader(object):
         self.datasets = datasets
 
     @property
+    def probes(self):
+        if(len(self.datasets) == 0):
+            return {}
+        probes = self.datasets[0].probes
+        for ds in self.datasets[1:]:
+            if(probes != ds.probes):
+                # TODO right now returned sample value arrays are not
+                # adjusted. that's why a difference in probes is not
+                # possible right now.
+                raise Exception('Probes in UnionDatasetReader missmatch. {} VS. {}'.format(probes, ds.probes))
+        return probes
+
+    @property
     def sample_count(self):
         count = 0
         for ds in self.datasets:
@@ -68,6 +81,10 @@ class UnionDatasetReader(object):
 class ShuffleDatasetReader(object):
     def __init__(self, dataset):
         self.dataset = dataset
+
+    @property
+    def probes(self):
+        return self.dataset.probes
 
     @property
     def sample_count(self):
@@ -87,6 +104,12 @@ class LazyDatasetReader(object):
 
     def __init__(self):
         self._dataset = None
+
+    @property
+    def probes(self):
+        if(self._dataset is None):
+            self._dataset = self.build_dataset()
+        return self._dataset.probes
 
     @property
     def dataset(self):
