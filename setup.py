@@ -15,10 +15,17 @@ setup(name='perkeep',
             'perkeep',
             'perkeep.datasets',
       ],
+      data_files=[
+            'AUTHORS',
+            'COPYING',
+            'README',
+      ],
       url='https://github.com/marook/python-perkeep',
       classifiers=[
             'Development Status :: 3 - Alpha',
             'Intended Audience :: Developers',
+            'License :: OSI Approved :: GNU General Public License (GPL)',
+            'Programming Language :: Python',
       ],
       keywords='perkeep',
 )
