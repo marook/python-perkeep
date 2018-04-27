@@ -15,4 +15,10 @@ setup(name='perkeep',
             'perkeep',
             'perkeep.datasets',
       ],
+      url='https://github.com/marook/python-perkeep',
+      classifiers=[
+            'Development Status :: 3 - Alpha',
+            'Intended Audience :: Developers',
+      ],
+      keywords='perkeep',
 )
