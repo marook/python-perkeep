@@ -1,3 +1,8 @@
+#
+# -*- coding: utf-8 -*-
+# python-perkeep 
+# Copyright (C) 2018  Markus Peröbner
+#
 from perkeep import datasets
 
 def main():

@@ -1,5 +1,7 @@
 #
-# Copyright 2018 Markus Peröbner
+# -*- coding: utf-8 -*-
+# python-perkeep 
+# Copyright (C) 2018  Markus Peröbner
 #
 '''Tools for reading, writing and manipulating datasets.
 
