@@ -6,7 +6,7 @@
 from distutils.core import setup
 
 setup(name='perkeep-utils',
-      version='0.1.0',
+      version='0.1.1',
       license='GPLv3',
       description='a client library for perkeep',
       author='Markus Peröbner',
