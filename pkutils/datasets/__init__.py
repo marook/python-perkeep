@@ -1,12 +1,12 @@
 #
 # -*- coding: utf-8 -*-
-# python-perkeep 
+# python-perkeep-utils
 # Copyright (C) 2018  Markus Peröbner
 #
 '''Tools for reading, writing and manipulating datasets.
 
 Writing a dataset:
-    with perkeep.datasets.FileSystemDatasetWriter('some/ds', [
+    with pkutils.datasets.FileSystemDatasetWriter('some/ds', [
         {
             "id": "tread_left_velocity",
             "type": "float",
@@ -18,11 +18,11 @@ Writing a dataset:
             ])
 
 Appending a random value to a written dataset:
-    ds = perkeep.datasets.RandomSampleDatasetWriter(ds)
+    ds = pkutils.datasets.RandomSampleDatasetWriter(ds)
 
 Reading a dataset and splitting:
-    ds = perkeep.datasets.build_from_resource_identifier('pk:attr:"per:type":dataset')
-    sample_categories = perkeep.datasets.split(ds.samples)
+    ds = pkutils.datasets.build_from_resource_identifier('pk:attr:"per:type":dataset')
+    sample_categories = pkutils.datasets.split(ds.samples)
 '''
 from .common import UnionDatasetReader, ShuffleDatasetReader, split, RandomSampleDatasetWriter, MappingSample, MixinSample
 from .fs import FileSystemDatasetReader, FileSystemDatasetWriter

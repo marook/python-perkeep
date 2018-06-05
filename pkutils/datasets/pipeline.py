@@ -1,6 +1,6 @@
 #
 # -*- coding: utf-8 -*-
-# python-perkeep 
+# python-perkeep-utils
 # Copyright (C) 2018  Markus Peröbner
 #
 '''Defines a pipeline for preparing samples for a training.
@@ -14,7 +14,7 @@ S5) shuffle samples
 S6) map to xy arrays
 S7) group xy arrays into batches
 
-pl = perkeep.datasets.Pipeline()
+pl = pkutils.datasets.Pipeline()
 pl.filters.append(lambda s: s['value'] > 0.5)
 pl.reducers.append(['value'])
 pl.categories = {

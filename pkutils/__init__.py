@@ -1,6 +1,6 @@
 #
 # -*- coding: utf-8 -*-
-# python-perkeep 
+# python-perkeep-utils
 # Copyright (C) 2018  Markus Peröbner
 #
 import datetime

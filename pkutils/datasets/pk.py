@@ -1,12 +1,12 @@
 #
 # -*- coding: utf-8 -*-
-# python-perkeep 
+# python-perkeep-utils
 # Copyright (C) 2018  Markus Peröbner
 #
 from . import common
 import io
 import json
-import perkeep
+import pkutils
 from PIL import Image
 
 class PerkeepDatasetExpressionReader(common.LazyDatasetReader):
@@ -15,7 +15,7 @@ class PerkeepDatasetExpressionReader(common.LazyDatasetReader):
         self.expression = expression
 
     def build_dataset(self):
-        results = perkeep.query({
+        results = pkutils.query({
             'expression': self.expression,
             'describe': {
                 'depth': 1,
@@ -38,7 +38,7 @@ class PerkeepDatasetReader(object):
     @property
     def _dataset(self):
         if(self.__dataset is None):
-            with perkeep.download(self.dataset_content_ref) as req:
+            with pkutils.download(self.dataset_content_ref) as req:
                 self.__dataset = json.load(req)
         return self.__dataset
 
@@ -77,10 +77,10 @@ class PerkeepSample(common.Sample):
         if(probe.type in PerkeepSample.IDENTITY_TYPES):
             return probe_value
         if(probe.type == 'image'):
-            with perkeep.download(probe_value) as req:
+            with pkutils.download(probe_value) as req:
                 return Image.open(req)
         if(probe.type == 'audio'):
-            with perkeep.download(probe_value) as req:
+            with pkutils.download(probe_value) as req:
                 # data = io.BytesIO(req.read())
                 # return soundfile.read(data)
                 raise Exception('audio support not yet implemented')
@@ -107,10 +107,10 @@ class PerkeepDatasetWriter(object):
             "probes": self.probes,
             "samples": self.samples,
         }
-        content_ref = perkeep.upload(json.dumps(dataset).encode('utf-8'), 'dataset.json')
+        content_ref = pkutils.upload(json.dumps(dataset).encode('utf-8'), 'dataset.json')
         permanode_attributes = self.permanode_attributes.copy()
         permanode_attributes['camliContent'] = content_ref
-        perkeep.persist(permanode_attributes)
+        pkutils.persist(permanode_attributes)
 
     def append(self, probe_values):
         sample = [self._map_probe_value(self.probes[i], v) for i, v in enumerate(probe_values)]
@@ -124,7 +124,7 @@ class PerkeepDatasetWriter(object):
             image_buffer = io.BytesIO()
             probe_value.save(image_buffer, self.image_format)
             file_name = '{}.{}'.format(probe['id'], self.image_format)
-            return perkeep.upload(image_buffer.getvalue(), file_name)
+            return pkutils.upload(image_buffer.getvalue(), file_name)
         if(probe_type == 'string'):
             return probe_value
         raise Exception('Unknown probe type: {}'.format(probe_type))

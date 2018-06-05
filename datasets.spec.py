@@ -1,9 +1,9 @@
 #
 # -*- coding: utf-8 -*-
-# python-perkeep 
+# python-perkeep-utils
 # Copyright (C) 2018  Markus Peröbner
 #
-from perkeep import datasets
+from pkutils import datasets
 
 def main():
     ds = datasets.build_from_resource_identifier('pk:attr:"per:type":dataset')

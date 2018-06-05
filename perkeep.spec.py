@@ -1,9 +1,9 @@
 #
 # -*- coding: utf-8 -*-
-# python-perkeep 
+# python-perkeep-utils
 # Copyright (C) 2018  Markus Peröbner
 #
-import perkeep
+import pkutils
 
 def main(modify):
     query_solln()
@@ -14,7 +14,7 @@ def main(modify):
 
 def query_solln():
     print_headline('query_solln')
-    results = perkeep.query({
+    results = pkutils.query({
         'expression': 'tag:solln',
         'describe': {
             'depth': 1,
@@ -36,17 +36,17 @@ def query_solln():
 def upload_hello_world():
     print_headline('upload_hello_world')
     content = 'Hello World!'.encode('utf-8')
-    file_ref = perkeep.upload(content, 'hello_world.txt')
+    file_ref = pkutils.upload(content, 'hello_world.txt')
     print('file_ref: {}'.format(file_ref))
 
 def sign():
     print_headline('sign')
-    print(perkeep.sign({}).decode('utf-8'))
+    print(pkutils.sign({}).decode('utf-8'))
 
 def persist():
     print_headline('persist')
-    ref = perkeep.persist({
-        'title': 'python-perkeep test permanode',
+    ref = pkutils.persist({
+        'title': 'python-perkeep-utils test permanode',
         'somaAttribute': [
             '1',
             '2',

@@ -1,6 +1,6 @@
 #
 # -*- coding: utf-8 -*-
-# python-perkeep 
+# python-perkeep-utils
 # Copyright (C) 2018  Markus Peröbner
 #
 import base64
@@ -65,8 +65,8 @@ def get_perkeep_config_dir_path():
     if('CAMLI_CONFIG_DIR' in os.environ):
         return os.environ['CAMLI_CONFIG_DIR']
     if(platform.system() == 'Windows'):
-        return os.path.join(os.path.expanduser('~'), 'AppData', 'Roaming', 'Camlistore')
-    return os.path.join(os.path.expanduser('~'), '.config', 'camlistore')
+        return os.path.join(os.path.expanduser('~'), 'AppData', 'Roaming', 'Perkeep')
+    return os.path.join(os.path.expanduser('~'), '.config', 'perkeep')
 
 class PreemptiveBasicAuthHandler(urllib.request.HTTPBasicAuthHandler):
     '''Preemptive basic auth.

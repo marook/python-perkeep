@@ -1,4 +1,4 @@
-python-perkeep
+python-perkeep-utils
 
 1) Installation
 2) Usage
@@ -15,7 +15,7 @@ $ python3 setup.py install --home ~/.local
 Usage
 
 $ python3
-    import perkeep.datasets as datasets
+    import pkutils.datasets as datasets
     help(datasets)
 
 
