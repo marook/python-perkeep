@@ -2,7 +2,8 @@ python-perkeep-utils
 
 1) Installation
 2) Usage
-3) License
+3) Release
+4) License
 
 
 ------------------------------------------------------------------------
@@ -17,6 +18,12 @@ Usage
 $ python3
     import pkutils.datasets as datasets
     help(datasets)
+
+
+-----------------------------------------------------------------------
+Release
+
+$ python3 setup.py sdist upload
 
 
 -----------------------------------------------------------------------
