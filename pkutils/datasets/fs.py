@@ -68,7 +68,7 @@ class FileSystemDatasetReader(object):
 
     @property
     def probes(self):
-        return self._probes + selt._globals
+        return self._probes + self._globals
 
     @property
     def sample_count(self):
