@@ -35,6 +35,13 @@ class FileSystemDatasetReader(object):
         ],
         "samples": [
             [0.1234567, "img0.jpg", 0.3534564788]
+        ],
+        "globals": [
+            {
+                "id": "track_visible",
+                "type": "boolean",
+                "value": true
+            }
         ]
     }
     '''
@@ -52,8 +59,16 @@ class FileSystemDatasetReader(object):
         return self.__dataset
 
     @property
-    def probes(self):
+    def _probes(self):
         return self._dataset['probes']
+
+    @property
+    def _globals(self):
+        return self._dataset['globals'] if 'globals' in self._dataset else []
+
+    @property
+    def probes(self):
+        return self._probes + selt._globals
 
     @property
     def sample_count(self):
@@ -62,9 +77,10 @@ class FileSystemDatasetReader(object):
     @property
     def samples(self):
         dataset = self._dataset
-        probe_by_id = dict([(p['id'], common.Probe(i, p['type'])) for i, p in enumerate(dataset['probes'])])
+        probe_by_id = dict([(p['id'], common.Probe(i, p['type'])) for i, p in enumerate(self._probes)])
+        global_by_id = dict([(p['id'], common.Probe(i, p['type'], p['value'])) for i, p in enumerate(self._globals)])
         for sample in dataset['samples']:
-            yield FileSystemSample(self.dataset_path, self.probes, probe_by_id, sample)
+            yield FileSystemSample(self.dataset_path, self._globals, self._probes, global_by_id, probe_by_id, sample)
 
 class FileSystemSample(common.Sample):
     
@@ -74,17 +90,25 @@ class FileSystemSample(common.Sample):
         'string',
     ])
 
-    def __init__(self, dataset_path, probes, probe_by_id, sample):
+    def __init__(self, dataset_path, globals, probes, global_by_id, probe_by_id, sample):
         self.dataset_path = dataset_path
+        self._globals = globals
         self._probes = probes
+        self._global_by_id = global_by_id
         self._probe_by_id = probe_by_id
         self.sample = sample
 
     def __getitem__(self, probe_id):
-        if(not probe_id in self._probe_by_id):
+        probe = None
+        probe_value = None
+        if(probe_id in self._probe_by_id):
+            probe = self._probe_by_id[probe_id]
+            probe_value = self.sample[probe.index]
+        if(probe_id in self._global_by_id):
+            probe = self._global_by_id[probe_id]
+            probe_value = probe.default_value
+        if(probe is None):
             return None
-        probe = self._probe_by_id[probe_id]
-        probe_value = self.sample[probe.index]
         if(probe.type in FileSystemSample.IDENTITY_TYPES):
             return probe_value
         if(probe.type == 'image'):
@@ -93,11 +117,11 @@ class FileSystemSample(common.Sample):
         raise Error('Unknown probe type: {}'.format(probe.type))
 
     def keys(self):
-        return self._probe_by_id.keys()
+        return self._probe_by_id.keys() + self._global_by_id.keys()
 
     @property
     def values(self):
-        return [self[probe['id']] for probe in self._probes]
+        return [self[probe['id']] for probe in self._probes] + [self[probe['id']] for probe in self._globals]
 
 class FileSystemDatasetWriter(object):
     '''Writes a dataset to the file system.

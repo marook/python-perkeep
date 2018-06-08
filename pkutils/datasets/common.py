@@ -6,9 +6,10 @@
 import random
 
 class Probe(object):
-    def __init__(self, index, type):
+    def __init__(self, index, type, default_value=None):
         self.index = index
         self.type = type
+        self.default_value = default_value
 
 class Sample(object):
     def __repr__(self):
