@@ -81,7 +81,7 @@ class FileSystemSample(common.Sample):
         self.sample = sample
 
     def __getitem__(self, probe_id):
-        if(not probe_id in self.probe_by_id):
+        if(not probe_id in self._probe_by_id):
             return None
         probe = self._probe_by_id[probe_id]
         probe_value = self.sample[probe.index]
