@@ -63,6 +63,7 @@ class PerkeepSample(common.Sample):
         'boolean',
         'float',
         'string',
+        'float[]',
     ])
     
     def __init__(self, probe_by_id, sample):
@@ -126,5 +127,7 @@ class PerkeepDatasetWriter(object):
             file_name = '{}.{}'.format(probe['id'], self.image_format)
             return pkutils.upload(image_buffer.getvalue(), file_name)
         if(probe_type == 'string'):
+            return probe_value
+        if(probe_type == 'float[]'):
             return probe_value
         raise Exception('Unknown probe type: {}'.format(probe_type))

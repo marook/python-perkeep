@@ -88,6 +88,7 @@ class FileSystemSample(common.Sample):
         'boolean',
         'float',
         'string',
+        'float[]',
     ])
 
     def __init__(self, dataset_path, globals, probes, global_by_id, probe_by_id, sample):
@@ -174,5 +175,7 @@ class FileSystemDatasetWriter(object):
             probe_value.save(os.path.join(self.dataset_path, image_file_name))
             return image_file_name
         if(probe_type == 'string'):
+            return probe_value
+        if(probe_type == 'float[]'):
             return probe_value
         raise Error('Unknown probe type: {}'.format(probe_type))
