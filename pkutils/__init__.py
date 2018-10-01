@@ -19,6 +19,15 @@ def query(opts):
 def download(ref):
     return pkhttp.urlopen('/ui/download/{}/blob'.format(ref))
 
+def thumbnail(ref, max_width=None, max_height=None):
+    url = '/ui/thumbnail/{}/image.png'.format(ref)
+    if(not max_width is None):
+        url += '?mw={}'.format(max_width)
+    if(not max_height is None):
+        url += '?' if max_width is None else '&'
+        url += 'mh={}'.format(max_height)
+    return pkhttp.urlopen(url)
+
 def persist(attributes):
     ref = create_permanode()
     for key, value in attributes.items():
