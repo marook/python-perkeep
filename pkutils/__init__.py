@@ -69,6 +69,17 @@ def add_permanode_attribute(ref, key, value):
     })
     return upload_claim(claim)
 
+def del_permanode_attribute(ref, key, value=''):
+    claim = sign({
+        'camliType': 'claim',
+        'permaNode': ref,
+        'claimType': 'del-attribute',
+        'claimDate': format_claim_datetime(datetime.datetime.utcnow()),
+        'attribute': key,
+        'value': value,
+    })
+    return upload_claim(claim)
+
 def format_claim_datetime(dt):
     millisecond = dt.microsecond / 1000
     return '{}.{:03.0f}Z'.format(dt.strftime('%Y-%m-%dT%H:%M:%S'), millisecond)
