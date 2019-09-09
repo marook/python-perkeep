@@ -17,6 +17,12 @@ def query(opts):
         return json.load(req)
 
 def download(ref):
+    '''download fetches the content for the giver blob ref.
+
+    Usually used like this:
+    with pkutils.download('sha224-…') as req:
+        # treat req as a stream
+    '''
     return pkhttp.urlopen('/ui/download/{}/blob'.format(ref))
 
 def thumbnail(ref, max_width=None, max_height=None):
